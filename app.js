@@ -1,9 +1,21 @@
 const express = require("express")
-const { userRoute } = require("./routes/userRoute")
+const cors = require("cors");
+const { userRoute } = require("./routes/userRoute");
 
-const app = express()
-app.use(express.json())
+const app = express();
 
-app.use("/v1", userRoute)
+// ✅ CORS MUST be before routes
+app.use(
+  cors({
+    origin: "*",   // allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
-module.exports = { app }
+app.use(express.json());
+
+// ✅ routes after cors
+app.use("/v1", userRoute);
+
+module.exports = { app };
+
