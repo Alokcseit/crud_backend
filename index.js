@@ -4,7 +4,7 @@ const {db} = require("./db/db")
 const cors =require("cors")
 app.use(cors(
   {
-    origin:"http://localhost:5173",
+    origin:"*",
     methods:['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
