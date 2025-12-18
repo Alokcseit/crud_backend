@@ -66,7 +66,21 @@ const userController= async(req,res)=>{
       res.status(404).json({message:"not update successfully"})
     }
     res.status(200).json(updateResponse)
-
   }
+  const deleteUser= async ( req,res)=>{
+   try {
+     let {id}= req.params
+    console.log(id)
+    const deleteResponse = await User.findOneAndDelete({id:id})
+    console.log(deleteResponse)
+    if(!deleteResponse){
+      res.status(500).json({message:"Not deleted sussesfully"})
+    }
+    res.status(200).json({message:"Deleted Successfully"})
+   } catch (error) {
+    throw new Error("Something Went Wrong")
+   }
+  } 
 
-module.exports={userController,getAllUsers,getSingleUserById ,updateUserById}
+
+module.exports={userController,getAllUsers,getSingleUserById ,updateUserById ,deleteUser}
