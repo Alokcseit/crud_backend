@@ -1,15 +1,12 @@
 const mongoose =require("mongoose")
-const {v4: uuidv4}=require("uuid")
-const id = uuidv4();
-console.log(id)
  const userSchema = new  mongoose.Schema({
      id:{
        type:String,
-       default:id
+       default: ()=>`USER#${Date.now()}`
      },
      username:{
       type:String,
-      required:[true,"enter in lowercase"]
+      required:true
      },
      email:{
        type:String,
@@ -35,6 +32,10 @@ console.log(id)
       color:{
         type:String,
         enum:["fair","brown","black"]
+      },
+      isActive:{
+        type:Boolean,
+        default:true
       }
   },{timestamps:true})
 

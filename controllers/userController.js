@@ -2,9 +2,9 @@ const {User}= require("../models/userModel")
 
 const userController= async(req,res)=>{
    console.log(req.body)
-   const{id,username,email,password,gender,maritalstatus,bloodgroup,color} = req.body;
+   const{username,email,password,gender,maritalstatus,bloodgroup,color} = req.body;
+   
    const user={
-    id,
     username,
     email,
     password,
@@ -19,8 +19,18 @@ const userController= async(req,res)=>{
   }
 
 
-  const getSingleUserById= async()=>{
-       
+  const getSingleUserById= async(req,res)=>{
+       const {id}=req.params;
+       if(!id){
+        return new Error("id not provided")
+       }
+       const user = await User.find({id:id})
+       if(user.length === 0){
+        console.log("hkadhfjd")
+         res.send(`user not found for id ${id}`)
+       }
+       res.status(200).
+       json(user)
   }
 
   const getAllUsers= async(req,res)=>{
@@ -32,4 +42,31 @@ const userController= async(req,res)=>{
      json(users)
   }
 
-module.exports={userController,getAllUsers}
+  const updateUserById= async ( req,res)=>{
+      const {id} = req.params
+      if(!id){
+        res.status(404).json({message:"id not provided"})
+      }
+    const updateData={
+      username:req.body.username,
+      email:req.body.email,
+      password:req.body.password,
+      gender:req.body.gender,
+      maritalstatus:req.body.maritalstatus,
+      bloodgroup:req.body.bloodgroup,
+      color:req.body.color
+    }
+
+    const updateResponse= await User.findOneAndUpdate(
+      {id:id},
+      {$set:updateData},
+      {new:true}
+    )
+    if(!updateResponse){
+      res.status(404).json({message:"not update successfully"})
+    }
+    res.status(200).json(updateResponse)
+
+  }
+
+module.exports={userController,getAllUsers,getSingleUserById ,updateUserById}
