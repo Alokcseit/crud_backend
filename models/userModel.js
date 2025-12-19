@@ -38,7 +38,7 @@ const mongoose =require("mongoose")
         default:true
       }
   },{timestamps:true})
-
+  userSchema.index({ id: 1 });
   const User= mongoose.model("User",userSchema)
 
   module.exports ={User}

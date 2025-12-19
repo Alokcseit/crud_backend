@@ -34,12 +34,34 @@ const userController= async(req,res)=>{
   }
 
   const getAllUsers= async(req,res)=>{
-     const users=  await User.find({})
-     if(!users){
+     try {
+      const limit = 3;
+      let cursor = req.query.cursor;
+      let users;
+      if(!cursor){
+                users = await User.find({isActive:true})
+                                  .sort({id:-1})
+                                  .limit(limit)
+      }
+      else{
+        users= await User.find({isActive:true ,
+          id:{$lt:cursor}
+        })
+        .sort({id:-1})
+        .limit(limit)
+      }
+     
+     if(users.length === 0){
        res.status(404).json({message:"There is no user"})
      }
      res.status(200).
-     json(users)
+     json({users
+      ,
+      nextCursor:users.length > 0 ? users[users.length -1].id :null
+     })
+     } catch (error) {
+       
+     }
   }
 
   const updateUserById= async ( req,res)=>{
